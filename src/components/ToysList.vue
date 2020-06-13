@@ -29,19 +29,27 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import { mapActions } from 'vuex';
 export default {
   data() {
     return {
       toys: []
     }
   },
-editProduct(){
+  methods: {
+    // These actions are abailable from the store. They can be called directly 
+    // in the template and upadate the state through mutations. AWESOME!!
+    ...mapActions(['setCurrentToy','showToyForm', 'HideToyForm']),
+    
+    editProduct(id) {  
+      this.setCurrentToy(id)
+      this.showToyForm()
+    },
+    deleteProdut(){
 
-},
-deleteProdut(){
-
-},
+    },
+  },
 created(){
   axios
     .get("https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toys")
@@ -51,7 +59,7 @@ created(){
     .catch(error =>{
       console.log('There was an error' + error.response)
     })
-}
+  }
 }
 </script>
 

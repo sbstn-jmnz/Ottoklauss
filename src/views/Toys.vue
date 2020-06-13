@@ -2,7 +2,7 @@
   <div>
   <app-bar></app-bar>   
     <v-main>
-      <toy-form :toy='currentToy' :display='showForm'></toy-form>
+      <toy-form :toy='currentToy' :dialog='showForm'></toy-form>
       <v-btn @click="newToy">New Toy</v-btn>
       <toys-list></toys-list>
     </v-main>
@@ -26,9 +26,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['hideForm','setEmptyToy']),
+    ...mapActions(['showToyForm', 'hideToyForm','setEmptyToy']),
     newToy(){
       this.setEmptyToy()
+      this.showToyForm()
     }
   },
   computed: {

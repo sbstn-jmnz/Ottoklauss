@@ -45,7 +45,7 @@ router.post("/toy", async (req, res) => {
     .collection("toys")
     .add(req.body)
     .then(docRef => {
-      return docRef
+      return docRef.id
     });
   res.send(toy);
 });
