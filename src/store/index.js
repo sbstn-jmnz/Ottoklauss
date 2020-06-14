@@ -8,7 +8,7 @@ const baseUrl = 'https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys';
 
 export default new Vuex.Store({
   state: {
-    currentToy: {},
+    currentToy: false,
     showForm: false,
     error: false
   },
@@ -31,13 +31,16 @@ export default new Vuex.Store({
   actions: {
     setCurrentToy({ commit }, id){
       axios
-        .get(`${baseUrl}/${id}`)
+        .get(`${baseUrl}/toy/${id}`)
         .then(response =>{ 
           commit('SET_CURRENT_TOY', response.data)
         })
         .catch(error => {
           commit('SET_ERROR_MESSAGE', error.response)
         })
+    },
+    setEmptyToy({ commit }){
+      commit('SET_CURRENT_TOY', false)
     },
     showToyForm({ commit }){
       commit('DISPLAY_TOY_FORM')
