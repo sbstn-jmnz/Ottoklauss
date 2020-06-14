@@ -16,10 +16,10 @@
           <v-row>
             <v-col>
               <v-form>
-                <v-text-field label="Nombre" type="text" />
-                <v-text-field label="Código" type="text" />
-                <v-text-field label="Price" prefix="$" />
-                <v-text-field label="Stock" suffix="unidades"/>
+                <v-text-field label="Nombre" type="text" :value="currentToy.data.name" @input="updateName"/>
+                <v-text-field label="Código" type="text" :value="currentToy.data.code" @input="updateCode"/>
+                <v-text-field label="Price" prefix="$" :value="currentToy.data.price" @input="updatePrice"/>
+                <v-text-field label="Stock" suffix="unidades" :value="currentToy.data.stock" @input="updateStock"/>
               </v-form>
             </v-col>
           </v-row>
@@ -30,10 +30,10 @@
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
-            @click="hideToyForm"
+            @click.stop="submitForm"
             type="submit" 
           >
-          {{ currentToy ? 'Actualizar' : 'Crear'}}
+          {{ !!currentToy.id ? 'Actualizar' : 'Crear'}}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -43,12 +43,23 @@
 
 <script>
 import { mapState, mapActions} from 'vuex'
+  
   export default {
    computed:{
      ...mapState(["showForm","currentToy"])
    },
    methods:{
-     ...mapActions(["hideToyForm"])
+     ...mapActions(["hideToyForm","postToy","updateName", "updateCode", "updatePrice", "updateStock", "updateToy"]),
+     submitForm(){
+         if(this.currentToy.id){
+           this.updateToy(this.currentToy.id)
+         } else{
+           this.postToy()
+         }
+       this.hideToyForm()
+     }
+   },
+   created(){
    }
   }
 </script>

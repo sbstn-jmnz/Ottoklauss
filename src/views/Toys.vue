@@ -21,10 +21,6 @@ export default {
     ToyForm,
     ToysList
   },
-  data() {
-    return {
-    }
-  },
   methods: {
     ...mapActions(['showToyForm', 'hideToyForm','setEmptyToy']),
     newToy(){

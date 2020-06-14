@@ -5,28 +5,35 @@ import axios from 'axios'
 Vue.use(Vuex)
 
 const baseUrl = 'https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys';
+const emptyToy = {
+          id: null,
+          data: {
+            name: '',
+            code: '',
+            price: 0,
+            stock: 0
+          }
+      }
 
 export default new Vuex.Store({
   state: {
-    currentToy: false,
+    currentToy: emptyToy,
+    toys: [],
     showForm: false,
     error: false
   },
   // As a best practice. State should be only modified by mutations, even if is for
   // minor actions. Then these mutations can be called/composed in the actions methods below 
   mutations: {
-    SET_CURRENT_TOY(state, currentToy){
-      state.currentToy = currentToy
-    },
-    DISPLAY_TOY_FORM(state){
-      state.showForm = true
-    },
-    HIDE_TOY_FORM(state){
-      state.showForm = false
-    },
-    SET_ERROR_MESSAGE(state, error){
-      state.error = error
-    }
+    SET_CURRENT_TOY(state, currentToy){ state.currentToy = currentToy },
+    DISPLAY_TOY_FORM(state){ state.showForm = true },
+    HIDE_TOY_FORM(state){ state.showForm = false },
+    SET_ERROR_MESSAGE(state, error){ state.error = error },
+    UPDATE_NAME(state, name){ state.currentToy.data.name = name },
+    UPDATE_CODE(state, code){ state.currentToy.data.code = code },
+    UPDATE_STOCK(state, stock){ state.currentToy.data.stock = stock },
+    UPDATE_PRICE(state, price){ state.currentToy.data.price = price },
+    SET_TOYS(state, data){ state.toys = data }
   },
   actions: {
     setCurrentToy({ commit }, id){
@@ -39,16 +46,31 @@ export default new Vuex.Store({
           commit('SET_ERROR_MESSAGE', error.response)
         })
     },
-    setEmptyToy({ commit }){
-      commit('SET_CURRENT_TOY', false)
-    },
-    showToyForm({ commit }){
-      commit('DISPLAY_TOY_FORM')
-    },
-    hideToyForm({ commit }){
-      commit('HIDE_TOY_FORM')
+    setEmptyToy({ commit }){ commit('SET_CURRENT_TOY', emptyToy) },
+    showToyForm({ commit }){ commit('DISPLAY_TOY_FORM')},
+    hideToyForm({ commit }){ commit('HIDE_TOY_FORM')},
+    updateName({commit}, name){ commit('UPDATE_NAME',name)},
+    updatePrice({commit}, price){ commit('UPDATE_PRICE',price)},
+    updateStock({commit}, stock){ commit('UPDATE_STOCK',stock)},
+    updateCode({commit}, code){ commit('UPDATE_CODE', code)},
+    getToys({ commit }){
+      axios
+        .get(`${baseUrl}/toys`)
+        .then(response => { commit('SET_TOYS', response.data)})
+        .catch(error =>{ commit('SET_ERROR_MESSAGE', error.response)})
+      },
+    updateToy( { commit, state, dispatch }, id){
+      axios
+        .put(`${baseUrl}/toy/${id}`, state.currentToy.data)
+        .then(() =>{ dispatch('getToys')})
+        .catch(error => { commit('SET_ERROR_MESSAGE', error.response)})
+      },
+    postToy({commit, state, dispatch}){
+      axios
+        .post(`${baseUrl}/toy`,state.currentToy.data)
+        .then(() =>{ dispatch('getToys') })
+        .catch(error => { commit('SET_ERROR_MESSAGE', error.response)})
+      }
     }
-  },
-  modules: {
   }
-})
+)
