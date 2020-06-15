@@ -58,8 +58,6 @@ import { mapState, mapActions} from 'vuex'
          }
        this.hideToyForm()
      }
-   },
-   created(){
    }
   }
 </script>

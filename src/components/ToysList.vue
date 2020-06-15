@@ -34,13 +34,15 @@ export default {
   methods: {
     // These actions are abailable from the store. They can be called directly 
     // in the template and upadate the state through mutations. AWESOME!!
-    ...mapActions(['setCurrentToy','showToyForm', 'HideToyForm','getToys']),
+    ...mapActions(['setCurrentToy','showToyForm', 'HideToyForm','getToys', 'deleteToy']),
     
     editProduct(id) {  
       this.setCurrentToy(id)
       this.showToyForm()
     },
-    deleteProdut(){}
+    removeProduct(id){
+      this.deleteToy(id)
+    }
   },
   computed: {
     ...mapState(['toys'])

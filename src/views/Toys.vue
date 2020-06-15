@@ -2,6 +2,9 @@
   <div>
   <app-bar></app-bar>   
     <v-main>
+      <v-overlay :value="loading">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
       <toy-form :toy='currentToy' :dialog='showForm'></toy-form>
       <v-btn @click="newToy">New Toy</v-btn>
       <toys-list></toys-list>
@@ -29,7 +32,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['showForm', 'currentToy'])
+    ...mapState(['showForm', 'currentToy', 'loading'])
   }
 }
 </script>
