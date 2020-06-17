@@ -5,19 +5,23 @@ import axios from 'axios'
 Vue.use(Vuex)
 
 const baseUrl = 'https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys';
-const emptyToy = {
-          id: null,
-          data: {
-            name: '',
-            code: '',
-            price: 0,
-            stock: 0
-          }
-      }
+
+function emptyToy() {
+   return { 
+    id: null,
+    data: {
+      name: '',
+      code: '',
+      price: 0,
+      stock: 0
+    }
+  }
+}
+
 
 export default new Vuex.Store({
   state: {
-    currentToy: emptyToy,
+    currentToy: emptyToy(),
     toys: [],
     showForm: false,
     error: false,
@@ -26,6 +30,13 @@ export default new Vuex.Store({
   // As a best practice. State should be only modified by mutations, even if is for
   // minor actions. Then these mutations can be called/composed in the actions methods below 
   mutations: {
+    SET_EMPTY_TOY(state){
+      const empty = emptyToy();
+      state.currentToy.id = null
+      Object.keys(empty.data).forEach(key => {
+        state.currentToy.data[key] = empty.data[key]
+      })
+    },
     SET_CURRENT_TOY(state, currentToy){ state.currentToy = currentToy },
     DISPLAY_TOY_FORM(state){ state.showForm = true },
     HIDE_TOY_FORM(state){ state.showForm = false },
@@ -39,13 +50,13 @@ export default new Vuex.Store({
     SET_TOYS(state, data){ state.toys = data }
   },
   actions: {
-    setEmptyToy({ commit }){ commit('SET_CURRENT_TOY', emptyToy) },
     showToyForm({ commit }){ commit('DISPLAY_TOY_FORM')},
     hideToyForm({ commit }){ commit('HIDE_TOY_FORM')},
     updateName({commit}, name){ commit('UPDATE_NAME',name)},
     updatePrice({commit}, price){ commit('UPDATE_PRICE',price)},
     updateStock({commit}, stock){ commit('UPDATE_STOCK',stock)},
     updateCode({commit}, code){ commit('UPDATE_CODE', code)},
+    setEmptyToy({commit}){ commit('SET_EMPTY_TOY')},
     setCurrentToy({ commit }, id){
       commit('SET_LOADING')
       axios
@@ -59,6 +70,7 @@ export default new Vuex.Store({
       axios
         .get(`${baseUrl}/toys`)
         .then(response => { commit('SET_TOYS', response.data)})
+        .then(() => { commit('SET_EMPTY_TOY') })
         .finally(() => commit('UNSET_LOADING'))
         .catch(error =>{ commit('SET_ERROR_MESSAGE', error.response)})
     },

@@ -27,6 +27,9 @@
         <v-divider></v-divider>
 
         <v-card-actions>
+          <v-btn 
+            color='warning'
+            @click.stop='cancelForm'>Cancelar</v-btn>
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
@@ -49,13 +52,28 @@ import { mapState, mapActions} from 'vuex'
      ...mapState(["showForm","currentToy"])
    },
    methods:{
-     ...mapActions(["hideToyForm","postToy","updateName", "updateCode", "updatePrice", "updateStock", "updateToy"]),
+     ...mapActions(
+       [
+       "hideToyForm",
+       "postToy",
+       "updateName",
+       "updateCode",
+       "updatePrice",
+       "updateStock",
+       "updateToy",
+       "setEmptyToy"
+       ]
+      ),
      submitForm(){
          if(this.currentToy.id){
            this.updateToy(this.currentToy.id)
          } else{
            this.postToy()
          }
+       this.hideToyForm()
+     },
+     cancelForm(){
+       this.setEmptyToy(),
        this.hideToyForm()
      }
    }

@@ -25,7 +25,7 @@ export default {
     ToysList
   },
   methods: {
-    ...mapActions(['showToyForm', 'hideToyForm','setEmptyToy']),
+    ...mapActions(['showToyForm','setEmptyToy']),
     newToy(){
       this.setEmptyToy()
       this.showToyForm()
