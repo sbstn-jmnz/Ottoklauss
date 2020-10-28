@@ -9,40 +9,49 @@ const router = express();
 
 router.use(cors({ origin: true }))
 
-router.get("/toy/:id", async (req, res) => {
+router.get("/course/:id", async (req, res) => {
   const toy = await admin
     .firestore()
-    .collection("toys")
+    .collection("courses")
     .doc(req.params.id)
     .get().then((doc) => {
-    if (doc.exists) {
-        console.log("Document data:", doc.data());
+      if (doc.exists) {
         return { id: doc.id, data: doc.data() }
-    } else {
+      } else {
         console.log("No such document!");
         return {}
-    }
-  });
+      }
+    });
   res.send(toy);
 });
 
-router.get("/toys", async (req, res) => {
-  const toys = await admin
-    .firestore()
-    .collection("toys")
-    .get();
-  var lista = [];
-  
-  toys.docs.forEach(doc => {
-    lista.push({ id: doc.id, data: doc.data() });
-  });
-  res.send(lista);
+router.get("/courses", (req, res) => {
+  const lista = [];
+  const db = admin.firestore()
+  db.collection("courses").get()
+    .then(querySnapshot => {
+      let promises = []
+      for (let course of querySnapshot.docs) {
+        lista.push({ id: course.id, data: course.data(), examples: [] })
+        promises.push(course.ref.collection('examples').get())
+      }
+      return Promise.all(promises)
+    })
+    .then(data => {
+      lista.forEach((course, index) => {
+        let dataSource = data[index]
+        dataSource.forEach(example => {
+          course.examples.push({ id: example.id, data: example.data() })
+        })
+      })
+      res.send(lista);
+    })
 });
 
-router.post("/toy", async (req, res) => {
+router.post("/courses/:id/examples/:example_id", async (req, res) => {
   const toy = await admin
     .firestore()
-    .collection("toys")
+    .collection("courses")
     .add(req.body)
     .then(docRef => {
       return docRef.id
@@ -50,30 +59,30 @@ router.post("/toy", async (req, res) => {
   res.send(toy);
 });
 
-router.put("/toy/:id", async (req, res) => {
+router.put("/course/:id", async (req, res) => {
   const toy = await admin
     .firestore()
-    .collection("toys")
+    .collection("courses")
     .doc(req.params.id)
     .update(req.body).then((doc) => {
-    if (doc.exists) {
+      if (doc.exists) {
         console.log("Document data:", doc.data());
         return doc.data()
-    } else {
+      } else {
         console.log("No such document!");
         return {}
-    }
-  });
+      }
+    });
   res.send(toy);
 });
 
-router.delete("/toy/:id", async (req, res) => {
+router.delete("/course/:id", async (req, res) => {
   const toy = await admin
     .firestore()
-    .collection("toys")
+    .collection("courses")
     .doc(req.params.id)
     .delete();
   res.send(toy);
 });
 
-exports.toys = functions.https.onRequest(router);
+exports.courses = functions.https.onRequest(router);

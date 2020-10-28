@@ -1,9 +1,7 @@
 <template>
   <div>
-    <h2>
-      Toys List
-    </h2> 
-    <v-simple-table dense fixed-header height >
+    <h2>Toys List</h2>
+    <v-simple-table dense fixed-header height>
       <thead>
         <tr>
           <th class="text-left">Nombre</th>
@@ -20,7 +18,9 @@
           <td>{{ toy.data.code }}</td>
           <td>{{ toy.data.price }}</td>
           <td>{{ toy.data.stock }}</td>
-          <td><v-icon @click="editProduct(toy.id)">mdi-pencil-outline</v-icon></td>
+          <td>
+            <v-icon @click="editProduct(toy.id)">mdi-pencil-outline</v-icon>
+          </td>
           <td><v-icon @click="removeProduct(toy.id)">mdi-delete</v-icon></td>
         </tr>
       </tbody>
@@ -29,30 +29,32 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
 export default {
   methods: {
-    // These actions are abailable from the store. They can be called directly 
+    // These actions are available from the store. They can be called directly
     // in the template and upadate the state through mutations. AWESOME!!
-    ...mapActions(['setCurrentToy','showToyForm', 'HideToyForm','getToys', 'deleteToy']),
-    
-    editProduct(id) {  
-      this.setCurrentToy(id)
-      this.showToyForm()
+    ...mapActions([
+      "setCurrentToy",
+      "showToyForm",
+      "HideToyForm",
+      "getToys",
+      "deleteToy",
+    ]),
+
+    editProduct(id) {
+      this.setCurrentToy(id);
+      this.showToyForm();
     },
-    removeProduct(id){
-      this.deleteToy(id)
-    }
+    removeProduct(id) {
+      this.deleteToy(id);
+    },
   },
   computed: {
-    ...mapState(['toys'])
+    ...mapState(["toys"]),
   },
-  created(){
-    this.getToys()
-  }
-}  
+  created() {
+    this.getToys();
+  },
+};
 </script>
-
-<style>
-
-</style>
