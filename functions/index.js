@@ -59,7 +59,7 @@ router.post("/courses/:id/examples/:example_id", async (req, res) => {
   res.send(toy);
 });
 
-router.put("/course/:id", async (req, res) => {
+router.put("/courses/:id", async (req, res) => {
   const toy = await admin
     .firestore()
     .collection("courses")
@@ -76,7 +76,7 @@ router.put("/course/:id", async (req, res) => {
   res.send(toy);
 });
 
-router.delete("/course/:id", async (req, res) => {
+router.delete("/courses/:id", async (req, res) => {
   const toy = await admin
     .firestore()
     .collection("courses")
@@ -85,4 +85,4 @@ router.delete("/course/:id", async (req, res) => {
   res.send(toy);
 });
 
-exports.courses = functions.https.onRequest(router);
+exports.api = functions.https.onRequest(router);
