@@ -9,7 +9,7 @@ const router = express();
 
 router.use(cors({ origin: true }))
 
-router.get("/course/:id", async (req, res) => {
+router.get("/courses/:id", async (req, res) => {
   const toy = await admin
     .firestore()
     .collection("courses")
