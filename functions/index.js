@@ -48,7 +48,7 @@ router.get("/courses", (req, res) => {
     })
 });
 
-router.post("/courses/:id/examples/:example_id", async (req, res) => {
+router.post("/courses", async (req, res) => {
   const toy = await admin
     .firestore()
     .collection("courses")
